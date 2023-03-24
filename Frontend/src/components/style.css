@@ -1,0 +1,91 @@
+.desc {
+  overflow: hidden;
+  color: rgb(205, 137, 36);
+}
+
+h2 {
+  background-color: rgb(5, 5, 101);
+  color: white;
+  text-decoration: underline;
+}
+
+.model {
+  text-align: justify;
+}
+
+body {
+  background-image: url(../images/slide1.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position-x: left;
+  background-size: cover;
+}
+
+.card {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 180px;
+}
+
+.card:hover {
+  border: 3px solid #4c4b4c;
+}
+
+.card.img {
+  width: 100%;
+  height: auto;
+}
+
+footer {
+  position: fixed;
+  flex-direction: column-reverse;
+}
+
+#admin {
+  background-color: #b2b2b5;
+}
+
+.btnCart {
+  background: linear-gradient(
+    180deg,
+    hsl(0, 0%, 100%) 20%,
+    hwb(183 60% 7%) 100%
+  );
+  font-size: xx-small;
+  opacity: 0.5;
+  border-radius: 20%;
+  margin-left: 2%;
+  margin-right: 2%;
+  color: black;
+}
+
+.btn {
+  background: linear-gradient(
+    180deg,
+    hsl(0, 0%, 100%) 20%,
+    hwb(187 35% 62%) 100%
+  );
+  color: rgb(3, 3, 3);
+}
+
+.offcanvas {
+  background: linear-gradient(
+    180deg,
+    hsl(0, 0%, 100%) 20%,
+    hwb(180 49% 49%) 100%
+  );
+}
+
+table,
+th,
+td {
+  background-color: rgb(5, 5, 101);
+  color: white;
+  border: 1px solid;
+  text-align: center;
+}
+
+table {
+  width: 50%;
+}
