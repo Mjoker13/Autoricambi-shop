@@ -1,21 +1,15 @@
-import { PostBrand, PutBrand, DeleteBrand } from "../Api";
+import { PostBrand, DeleteBrand, PutBrand, searchMarca } from "../Api";
 import { useState, useEffect } from "react";
-import "../components/style.css";
-import { searchMarca } from "../Api";
+import { AdminLayout } from "../components/AdminLayout";
 import { BrandAdmin } from "../components/BrandAdmin";
 
 export const BrandAdminPage = () => {
   const [data, setData] = useState([]);
 
-  // get all brand
   const getBrand = async (key) => {
     const response = await searchMarca(key);
     setData(response);
   };
-
-  // const changeBrand = async (key) => {
-  //   getBrand(key);
-  // };
 
   const insertBrand = async (temp) => {
     await PostBrand(temp);
@@ -32,18 +26,19 @@ export const BrandAdminPage = () => {
     getBrand();
   };
 
-  useEffect(() => {
-    getBrand();
-  }, []);
+  useEffect(() => { getBrand(); }, []);
 
   return (
-    <>
+    <AdminLayout
+      title="Gestione Marche"
+      subtitle={`${data.length} marc${data.length !== 1 ? 'he' : 'a'} nel catalogo`}
+    >
       <BrandAdmin
+        data={data}
         insertBrand={insertBrand}
         delBrand={delBrand}
-        data={data}
         updateBrand={updateBrand}
       />
-    </>
+    </AdminLayout>
   );
 };

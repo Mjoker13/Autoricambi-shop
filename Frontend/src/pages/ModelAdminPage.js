@@ -1,49 +1,33 @@
 import { useState, useEffect } from "react";
-import { searchModel, PostModel, DeleteModel, searchMarca } from "../Api";
+import { searchModel, PostModel, DeleteModel, PutModel, searchMarca } from "../Api";
+import { AdminLayout } from "../components/AdminLayout";
 import { ModelAdmin } from "../components/ModelAdmin";
 
 export const ModelAdminPage = () => {
-  const [data, setData] = useState([]);
+  const [data,  setData]  = useState([]);
   const [brand, setBrand] = useState([]);
 
-  const getBrand = async (key) => {
-    const response = await searchMarca(key);
-    setBrand(response);
-  };
+  const getBrand = async () => { const r = await searchMarca();  setBrand(r); };
+  const getModel = async () => { const r = await searchModel();  setData(r);  };
 
-  const getModel = async (key) => {
-    const response = await searchModel(key);
-    setData(response);
-  };
+  const insertModel  = async (temp, id) => { await PostModel(temp, id);   getModel(); };
+  const delModel     = async (id)        => { await DeleteModel(id);       getModel(); };
+  const updateModel  = async (temp, id)  => { await PutModel(temp, id);    getModel(); };
 
-  // const changeModel = async (key) => {
-  //   console.log(key);
-  //   getModel(key);
-  // };
-
-  const insertModel = async (temp, id) => {
-    await PostModel(temp, id);
-    getModel();
-  };
-
-  const delModel = async (id) => {
-    await DeleteModel(id);
-    getModel();
-  };
-
-  useEffect(() => {
-    getModel();
-    getBrand();
-  }, []);
+  useEffect(() => { getModel(); getBrand(); }, []);
 
   return (
-    <>
+    <AdminLayout
+      title="Gestione Modelli"
+      subtitle={`${data.length} modell${data.length !== 1 ? 'i' : 'o'} nel catalogo`}
+    >
       <ModelAdmin
         data={data}
         delModel={delModel}
         insertModel={insertModel}
+        updateModel={updateModel}
         brand={brand}
       />
-    </>
+    </AdminLayout>
   );
 };

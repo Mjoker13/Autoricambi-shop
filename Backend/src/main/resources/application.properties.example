@@ -22,5 +22,5 @@ spring.sql.init.mode=always
 
 #-------------------------
 # JWT
-jwt.secret=${JWT_SECRET:autoricambishop-secret-key-min-32-chars-!!}
+jwt.secret=${JWT_SECRET:change-this-to-a-random-secret-min-32-chars}
 jwt.expiration-ms=${JWT_EXPIRATION_MS:86400000}

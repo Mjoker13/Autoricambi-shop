@@ -61,10 +61,33 @@ public class ModelliController {
         }
     }
 
+    /**
+     * PUT /api/v1/modelli/{id}
+     * Aggiorna nome, anno e immagine di un modello senza cambiarne la marca.
+     * Usato dal pannello admin — più semplice perché non richiede il marca_id.
+     */
+    @PutMapping("/{id}")
+    public Modelli putModello(@RequestBody Modelli m, @PathVariable Integer id) {
+        Optional<Modelli> result = modelliRepo.findById(id);
+        if (result.isPresent()) {
+            Modelli m2 = result.get();
+            m2.setName(m.getName());
+            m2.setYearOfProduction(m.getYearOfProduction());
+            m2.setImage(m.getImage());
+            return modelliRepo.save(m2);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * PUT /api/v1/modelli/{marca_id}/{id}
+     * Aggiorna un modello cambiandone anche la marca (uso avanzato).
+     */
     @PutMapping("/{marca_id}/{id}")
-    public Modelli puModel(@RequestBody Modelli m,@PathVariable Integer id, @PathVariable Integer marca_id){
+    public Modelli putModelloConMarca(@RequestBody Modelli m, @PathVariable Integer id, @PathVariable Integer marca_id) {
         Optional<Marca> marcaRes = marcaRepo.findById(marca_id);
-        if(marcaRes.isPresent()) {
+        if (marcaRes.isPresent()) {
             Marca ma = marcaRes.get();
             Optional<Modelli> result = modelliRepo.findById(id);
             if (result.isPresent()) {
@@ -73,13 +96,12 @@ public class ModelliController {
                 m2.setName(m.getName());
                 m2.setYearOfProduction(m.getYearOfProduction());
                 m2.setImage(m.getImage());
-                m2.setRicambi(m.getRicambi());
                 m2.setId(id);
                 return modelliRepo.save(m2);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

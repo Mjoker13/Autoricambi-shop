@@ -41,6 +41,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         // GET — chiunque può vedere il catalogo
                         .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                        // Acquisto — pubblico (i clienti non hanno account admin)
+                        // DEVE stare prima della regola POST generica
+                        .requestMatchers(HttpMethod.POST, "/api/v1/ricambi/*/purchase").permitAll()
                         // Scritture — solo ADMIN autenticato
                         .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
@@ -60,7 +63,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsMapping("/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 

@@ -112,6 +112,24 @@ export const PostModel = async (model, id) => {
   }
 };
 
+/**
+ * PutModel — aggiorna nome, anno e immagine di un modello.
+ * Usa PUT /api/v1/modelli/{id} (non richiede marca_id).
+ */
+export const PutModel = async (model, id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/modelli/${id}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(model),
+    });
+    if (!response.ok) return { ok: false, data: await response.json() };
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const DeleteModel = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/modelli/${id}`, {
@@ -191,13 +209,41 @@ export const DeleteSparePart = async (id) => {
 export const getSparePartById = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/ricambi/${id}`);
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
-// --- DTO endpoints (attualmente commentati nel backend — non usare) ---
-// export const searchSparePartDto = ...
-// export const PostSparePartDto = ...
+/**
+ * purchaseRicambio — acquisto atomico di 1 unità.
+ *
+ * Il backend decrementa la quantità con una UPDATE atomica (WHERE quantity > 0).
+ * Se la quantità è già 0 (race condition), il backend risponde 409 Conflict.
+ *
+ * Ritorna:
+ *   { ok: true,  data: <Ricambi aggiornato> }   → acquisto OK
+ *   { ok: false, status: 409, message: '...' }   → esaurito (preso da un altro utente)
+ *   { ok: false, status: N,   message: '...' }   → altro errore
+ */
+export const purchaseRicambio = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/ricambi/${id}/purchase`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+    if (response.ok) {
+      return { ok: true, data: await response.json() };
+    }
+    const errBody = await response.json().catch(() => ({}));
+    return {
+      ok: false,
+      status: response.status,
+      message: errBody.message || (response.status === 409
+        ? "Ricambio esaurito: un altro utente lo ha appena acquistato"
+        : "Errore durante l'acquisto"),
+    };
+  } catch (error) {
+    return { ok: false, status: 0, message: "Errore di rete" };
+  }
+};
