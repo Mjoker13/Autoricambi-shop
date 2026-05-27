@@ -1,0 +1,13 @@
+# Build output
+Backend/target/
+Frontend/build/
+
+# Dependencies
+Frontend/node_modules/
+
+# IDE files
+Backend/.idea/
+*.iml
+
+# Secrets — non committare mai il file reale con credenziali
+Backend/src/main/resources/application.properties
