@@ -51,55 +51,35 @@ export const App = () => {
 
   // funzione per decrementare la quantità del ricambio e aumentare la quantita del ricambio
   const decrementQuantity = (product) => {
-    sparePart.filter((el) => {
-      if (el.id === product.id) {
-        el.quantity--;
-        if (el.id === 0) {
-          return false;
-        }
-      }
-      return true;
-    });
+    setSparePart(sparePart.map((el) =>
+      el.id === product.id ? { ...el, quantity: el.quantity - 1 } : el
+    ));
     handleAddClick(product);
   };
 
   // funzione per decrementare il carrello dal bottone del carrello(-) e incrementare la quantita del ricambio
   const incrementQuantity = (product) => {
-    sparePart.filter((el) => {
-      if (el.id === product.id) {
-        el.quantity++;
-        if (el.id === 0) {
-          return false;
-        }
-      }
-      return true;
-    });
+    setSparePart(sparePart.map((el) =>
+      el.id === product.id ? { ...el, quantity: el.quantity + 1 } : el
+    ));
     handleDeleteClick(product);
   };
 
   // funzione per incrementare il carrello dal bottore del carrello(+) e diminuire la quantita del ricambio
   const incrementQuantityCart = (product) => {
-    sparePart.filter((el) => {
-      if ((el.id === product.id) & (el.quantity > 0)) {
-        el.quantity--;
-        handleAddClick(product);
-        return true;
-      } else {
-        return false;
-      }
-    });
+    const target = sparePart.find((el) => el.id === product.id);
+    if (target && target.quantity > 0) {
+      setSparePart(sparePart.map((el) =>
+        el.id === product.id ? { ...el, quantity: el.quantity - 1 } : el
+      ));
+      handleAddClick(product);
+    }
   };
 
   const handleDeleteClick = (product) => {
-    const newCart = cartProducts.filter((el) => {
-      if (el.id === product.id) {
-        el.quantity--;
-        if (el.quantity === 0) {
-          return false;
-        }
-      }
-      return true;
-    });
+    const newCart = cartProducts
+      .map((el) => el.id === product.id ? { ...el, quantity: el.quantity - 1 } : el)
+      .filter((el) => el.quantity > 0);
     setCartProducts(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
     window.dispatchEvent(new Event("storage"));
@@ -108,14 +88,12 @@ export const App = () => {
   // create new product
   const handleAddClick = (product) => {
     let found = false;
-    let newCart = cartProducts.filter((el) => {
-      return true;
-    });
-    newCart.forEach((el) => {
+    const newCart = cartProducts.map((el) => {
       if (el.id === product.id) {
-        el.quantity++;
         found = true;
+        return { ...el, quantity: el.quantity + 1 };
       }
+      return el;
     });
     if (!found) {
       const newProduct = {
@@ -143,14 +121,14 @@ export const App = () => {
 
   useEffect(() => {
     window.addEventListener("storage", () => {
-      const carts = JSON.parse(localStorage.getItem("cart") || []);
+      const carts = JSON.parse(localStorage.getItem("cart") || "[]");
       setCartProducts(carts);
     });
-    const carts = JSON.parse(localStorage.getItem("cart"));
+    const carts = JSON.parse(localStorage.getItem("cart") || "[]");
     setCartProducts(carts);
 
     window.addEventListener("change", () => {
-      const empityCart = JSON.parse(localStorage.getItem("empityCart") || []);
+      const empityCart = JSON.parse(localStorage.getItem("empityCart") || "[]");
       setCartProducts(empityCart);
     });
   }, []);

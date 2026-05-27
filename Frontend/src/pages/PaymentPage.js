@@ -6,10 +6,10 @@ export const PaymentPage = ({ empityCart }) => {
     <>
       <h3>Insert your data for payment</h3>
       <form className="bg-white text-center">
-        <div class="mb-3">
-          <div class="row mt-3">
-            <div class="col">
-              <label for="exampleFormControlInput1" class="form-label">
+        <div className="mb-3">
+          <div className="row mt-3">
+            <div className="col">
+              <label for="exampleFormControlInput1" className="form-label">
                 First Name
               </label>
               <input
@@ -19,8 +19,8 @@ export const PaymentPage = ({ empityCart }) => {
                 aria-label="First name"
               />
             </div>
-            <div class="col">
-              <label for="exampleFormControlInput1" class="form-label">
+            <div className="col">
+              <label for="exampleFormControlInput1" className="form-label">
                 Last Name
               </label>
               <input
@@ -32,10 +32,10 @@ export const PaymentPage = ({ empityCart }) => {
             </div>
           </div>
         </div>
-        <div class="mb-3">
-          <div class="row mt-3">
-            <div class="col">
-              <label for="exampleFormControlInput1" class="form-label">
+        <div className="mb-3">
+          <div className="row mt-3">
+            <div className="col">
+              <label for="exampleFormControlInput1" className="form-label">
                 Emai Address
               </label>
               <input
@@ -45,8 +45,8 @@ export const PaymentPage = ({ empityCart }) => {
                 aria-label="Emai Address"
               />
             </div>
-            <div class="col">
-              <label for="exampleFormControlInput1" class="form-label">
+            <div className="col">
+              <label for="exampleFormControlInput1" className="form-label">
                 Card Code
               </label>
               <input

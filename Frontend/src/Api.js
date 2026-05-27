@@ -1,5 +1,7 @@
+const BASE_URL = process.env.REACT_APP_API_URL || "${BASE_URL}";
+
 export const searchMarca = async (key) => {
-  let url = "http://localhost:8080/api/v1/marche";
+  let url = `${BASE_URL}/api/v1/marche`;
   if (key !== null && key !== undefined && key !== "") {
     url += "?keyword=" + key;
   }
@@ -15,7 +17,7 @@ export const searchMarca = async (key) => {
 };
 
 export const searchModel = async (key) => {
-  let url = "http://localhost:8080/api/v1/modelli";
+  let url = "${BASE_URL}/api/v1/modelli";
   if (key !== null && key !== undefined && key !== "") {
     url += "?keyword=" + key;
   }
@@ -30,7 +32,7 @@ export const searchModel = async (key) => {
 };
 
 export const searchSparePart = async (key) => {
-  let url = "http://localhost:8080/api/v1/ricambi";
+  let url = "${BASE_URL}/api/v1/ricambi";
   if (key !== null && key !== undefined && key !== "") {
     url += "?keyword=" + key;
   }
@@ -45,7 +47,7 @@ export const searchSparePart = async (key) => {
 };
 
 export const PostBrand = async (brand) => {
-  let url = "http://localhost:8080/api/v1/marche";
+  let url = "${BASE_URL}/api/v1/marche";
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -63,9 +65,9 @@ export const PostBrand = async (brand) => {
 };
 
 export const PutBrand = async (brand, id) => {
-  let url = "http://localhost:8080/api/v1/marche";
+  let url = "${BASE_URL}/api/v1/marche";
   if (id !== null && id !== undefined && id !== "") {
-    url += "/id";
+    url += "/" + id;
   }
   try {
     const response = await fetch(url, {
@@ -83,7 +85,7 @@ export const PutBrand = async (brand, id) => {
 };
 
 export const DeleteBrand = async (id) => {
-  let url = "http://localhost:8080/api/v1/marche";
+  let url = "${BASE_URL}/api/v1/marche";
   if (id !== 0) {
     url += "/" + id;
   }
@@ -102,7 +104,7 @@ export const DeleteBrand = async (id) => {
 };
 
 export const PostModel = async (model, id) => {
-  let url = "http://localhost:8080/api/v1/modelli";
+  let url = "${BASE_URL}/api/v1/modelli";
   if (id !== 0) {
     url += "/" + id;
   }
@@ -123,7 +125,7 @@ export const PostModel = async (model, id) => {
 };
 
 export const DeleteModel = async (id) => {
-  let url = "http://localhost:8080/api/v1/modelli";
+  let url = "${BASE_URL}/api/v1/modelli";
   if (id !== 0) {
     url += "/" + id;
   }
@@ -142,7 +144,7 @@ export const DeleteModel = async (id) => {
 };
 
 export const PostSparePart = async (sparePart, id) => {
-  let url = "http://localhost:8080/api/v1/ricambi";
+  let url = "${BASE_URL}/api/v1/ricambi";
   if (id !== 0) {
     url += "/" + id;
   }
@@ -163,7 +165,7 @@ export const PostSparePart = async (sparePart, id) => {
 };
 
 export const DeleteSparePart = async (id) => {
-  let url = "http://localhost:8080/api/v1/ricambi";
+  let url = "${BASE_URL}/api/v1/ricambi";
   if (id !== "") {
     url += "/" + id;
   }
@@ -182,7 +184,7 @@ export const DeleteSparePart = async (id) => {
 };
 
 export const searchSparePartDto = async (key) => {
-  let url = "http://localhost:8080/api/v1/ricambi/dto";
+  let url = "${BASE_URL}/api/v1/ricambi/dto";
   if (key !== null && key !== undefined && key !== "") {
     url += "?keyword=" + key;
   }
@@ -197,7 +199,7 @@ export const searchSparePartDto = async (key) => {
 };
 
 export const PostSparePartDto = async (sparePart) => {
-  let url = "http://localhost:8080/api/v1/ricambi/dto";
+  let url = "${BASE_URL}/api/v1/ricambi/dto";
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -215,7 +217,7 @@ export const PostSparePartDto = async (sparePart) => {
 };
 
 export const PutSparePart = async (sparePart, id) => {
-  let url = "http://localhost:8080/api/v1/ricambi";
+  let url = "${BASE_URL}/api/v1/ricambi";
   if (id !== null && id !== undefined && id !== "") {
     url += "/" + id;
   }
@@ -235,7 +237,7 @@ export const PutSparePart = async (sparePart, id) => {
 };
 
 export const getSparePartById = async (id) => {
-  let url = "http://localhost:8080/api/v1/ricambi";
+  let url = "${BASE_URL}/api/v1/ricambi";
   if (id !== null && id !== undefined && id !== "") {
     url += "/" + id;
   }
