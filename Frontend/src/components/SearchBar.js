@@ -1,10 +1,10 @@
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { BsGearWideConnected } from "react-icons/bs";
+import { BsGearWideConnected, BsSearch } from "react-icons/bs";
 import { Cart } from "./Cart";
+import "./style.css";
 
 export const SearchBar = ({
   changeBrand,
@@ -15,32 +15,38 @@ export const SearchBar = ({
   incrementQuantityCart,
   disabled,
 }) => {
-  const HandleForKey = async (event) => {
-    event.preventDefault();
-    changeBrand(event.target.value);
-    changeModel(event.target.value);
-    changeSpareParts(event.target.value);
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    changeBrand(value);
+    changeModel(value);
+    changeSpareParts(value);
+  };
+
+  const handleSearchBtn = () => {
+    // il cambio è già gestito onChange
   };
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar className="ar-navbar" expand="lg" variant="dark">
       <Container fluid>
+        {/* Brand / Logo */}
         <Navbar.Brand href="/">
           <BsGearWideConnected />
-          Ricambi per auto
+          AutoRicambi
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
-            <Nav.Link href="/Brand">Brand</Nav.Link>
-            <Nav.Link href="/Model">Model</Nav.Link>
-            <Nav.Link href="/SpareParts">Spare parts</Nav.Link>
-            <Nav.Link href="/Login">Admin</Nav.Link>
+
+        <Navbar.Toggle aria-controls="navbarMain" />
+
+        <Navbar.Collapse id="navbarMain">
+          {/* Nav Links */}
+          <Nav className="me-auto my-2 my-lg-0">
+            <Nav.Link href="/Brand">Marche</Nav.Link>
+            <Nav.Link href="/Model">Modelli</Nav.Link>
+            <Nav.Link href="/SpareParts">Ricambi</Nav.Link>
+            <Nav.Link href="/Login">Area Admin</Nav.Link>
           </Nav>
+
+          {/* Carrello */}
           <Cart
             cartProducts={cartProducts}
             incrementQuantity={incrementQuantity}
@@ -48,18 +54,23 @@ export const SearchBar = ({
             disabled={disabled}
           />
 
-          <Form className="d-flex">
+          {/* Barra di ricerca */}
+          <Form className="d-flex ms-2 gap-1" onSubmit={(e) => e.preventDefault()}>
             <Form.Control
               type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-              onChange={HandleForKey}
+              placeholder="Cerca marca, modello, ricambio..."
+              className="ar-search-input"
+              aria-label="Ricerca"
+              onChange={handleSearch}
             />
-
-            <Button variant="outline-dark" onClick={HandleForKey}>
-              Search
-            </Button>
+            <button
+              type="button"
+              className="ar-search-btn btn d-flex align-items-center gap-1"
+              onClick={handleSearchBtn}
+            >
+              <BsSearch />
+              <span className="d-none d-xl-inline">Cerca</span>
+            </button>
           </Form>
         </Navbar.Collapse>
       </Container>
