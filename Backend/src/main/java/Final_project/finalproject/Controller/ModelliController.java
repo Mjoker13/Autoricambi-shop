@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/modelli")
-@CrossOrigin
 public class ModelliController {
 
     @Autowired

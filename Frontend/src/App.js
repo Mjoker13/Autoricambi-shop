@@ -15,6 +15,8 @@ import { useState, useEffect } from "react";
 import { SearchBar } from "./components/SearchBar";
 import { BsFacebook } from "react-icons/bs";
 import { Login } from "./pages/Login";
+import { AuthProvider } from "./context/AuthContext";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 export const App = () => {
   const [sparePart, setSparePart] = useState([]);
@@ -140,7 +142,7 @@ export const App = () => {
   }, []);
 
   return (
-    <>
+    <AuthProvider>
       <Container>
         <SearchBar
           empityCart={empityCart}
@@ -168,18 +170,21 @@ export const App = () => {
       </Container>
       <Container>
         <Routes>
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/admin"
+            element={<PrivateRoute><Admin /></PrivateRoute>}
+          />
           <Route
             path="/BrandAdminPage"
-            element={<BrandAdminPage brand={brand} />}
+            element={<PrivateRoute><BrandAdminPage brand={brand} /></PrivateRoute>}
           />
           <Route
             path="/ModelAdminPage"
-            element={<ModelAdminPage model={model} />}
+            element={<PrivateRoute><ModelAdminPage model={model} /></PrivateRoute>}
           />
           <Route
             path="/SparePartsAdminPage"
-            element={<SpareAdminPage sparePart={sparePart} />}
+            element={<PrivateRoute><SpareAdminPage sparePart={sparePart} /></PrivateRoute>}
           />
           <Route
             path="/PaymentPage"
@@ -204,6 +209,6 @@ export const App = () => {
           <h5>Back to home</h5>
         </Link>
       </Container>
-    </>
+    </AuthProvider>
   );
 };

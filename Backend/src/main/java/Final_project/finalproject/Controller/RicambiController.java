@@ -20,7 +20,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/ricambi")
-@CrossOrigin
 public class RicambiController {
 
     @Autowired
