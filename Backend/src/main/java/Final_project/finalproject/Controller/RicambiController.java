@@ -1,19 +1,18 @@
 package Final_project.finalproject.Controller;
 
-import Final_project.finalproject.Entity.Marca;
 import Final_project.finalproject.Entity.Modelli;
 import Final_project.finalproject.Entity.Ricambi;
-import Final_project.finalproject.Entity.RicambiDTO;
-import Final_project.finalproject.Repository.MarcaRepo;
 import Final_project.finalproject.Repository.ModelliRepo;
 import Final_project.finalproject.Repository.RicambiRepo;
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +21,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/ricambi")
 public class RicambiController {
 
+    private static final Logger log = LoggerFactory.getLogger(RicambiController.class);
+
     @Autowired
     private RicambiRepo ricambiRepo;
     @Autowired
     private ModelliRepo modelliRepo;
-    @Autowired
-    private MarcaRepo marcaRepo;
 
     @GetMapping
     public List<Ricambi> getAllRicambi(@RequestParam(name = "keyword", required = false) String s) {
@@ -85,6 +84,37 @@ public class RicambiController {
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
+    }
+
+    /**
+     * POST /api/v1/ricambi/{id}/purchase
+     *
+     * Acquisto atomico: decrementa la quantità di 1 se disponibile.
+     * Usato dal frontend al momento del checkout.
+     *
+     * Risposta:
+     *   200 OK    → acquisto OK, ritorna il ricambio aggiornato
+     *   409 Conflict → esaurito (un altro utente ha comprato l'ultimo pezzo)
+     *   404 Not Found → id non esiste
+     *
+     * L'operazione è transazionale e usa una UPDATE atomica a livello DB:
+     * nessun overselling anche con N acquirenti simultanei sullo stesso ricambio.
+     */
+    @PostMapping("/{id}/purchase")
+    @Transactional
+    public Ricambi purchaseRicambi(@PathVariable Integer id) {
+        if (!ricambiRepo.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ricambio non trovato");
+        }
+        int updated = ricambiRepo.decrementQuantityIfAvailable(id);
+        if (updated == 0) {
+            log.warn("Tentativo di acquisto su ricambio esaurito id={}", id);
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Ricambio non disponibile: quantità esaurita");
+        }
+        log.info("Acquisto completato per ricambio id={}", id);
+        return ricambiRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{modelli_id}/{id}")

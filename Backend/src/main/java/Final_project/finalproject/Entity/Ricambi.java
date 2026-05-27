@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
 @Entity
 @Table(name="ricambi")
 public class Ricambi {
@@ -13,10 +11,19 @@ public class Ricambi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    /**
+     * Versione per Optimistic Locking JPA.
+     * Se due transazioni cercano di modificare lo stesso ricambio contemporaneamente,
+     * la seconda riceve una OptimisticLockException (409 Conflict) invece di
+     * sovrascrivere silenziosamente la prima — prevenendo l'overselling.
+     */
+    @Version
+    private Long version;
+
     @NotBlank(message = "name must not be blank")
     private String name;
     private double price;
-   // private String model_compatible;
     @NotBlank
     private String category;
     private int quantity;
@@ -45,6 +52,10 @@ public class Ricambi {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public String getName() {
