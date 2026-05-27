@@ -1,6 +1,6 @@
 # Autoricambi-shop — Project Status
 
-> Aggiornato: 2026-05-27
+> Aggiornato: 2026-05-27 (sessione 3)
 > Obiettivo: Portare il progetto in produzione (e-commerce ricambi auto)
 
 ---
@@ -28,6 +28,26 @@
   - `App.js` — `localStorage` fallback da `|| []` a `|| "[]"` (prevenuto crash su sessione fresca)
   - `PaymentPage.js` — `class=` → `className=` (JSX fix, stili Bootstrap ora funzionanti)
   - `application.properties` — password MySQL decommentata
+- [x] **FASE 1 — Autenticazione JWT** (2026-05-27):
+  - Backend: `pom.xml` creato, Spring Security + JJWT 0.12.5, `JwtUtil`, `JwtAuthFilter`, `SecurityConfig`
+  - Backend: `DataInitializer` crea utente admin/admin123 al primo avvio (con warning cambio password)
+  - Backend: `AuthController` `POST /api/v1/auth/login`, `User` entity, `application.properties` aggiornato
+  - Frontend: `package.json` creato, `AuthContext`, `PrivateRoute`, `Login.js` con chiamata API reale
+  - Frontend: `Api.js` riscritto con `getAuthHeaders()`, tutte le chiamate admin protette
+  - Frontend: `App.js` — tutte le route admin protette con `PrivateRoute`
+- [x] **FASE UI — Redesign completo Frontend** (2026-05-27):
+  - Design system: CSS variables (Navy #0A1628 + Orange #F97316), font Inter + Barlow Condensed
+  - `public/index.html` — Google Fonts, meta description, lang=it
+  - `style.css` — riscritto completamente (~400 righe), tutte le vecchie regole rotte rimosse
+  - `SearchBar.js` — navbar sticky navy, link italiani, search con stile
+  - `Cart.js` — offcanvas navy, qty controls circolari, totale con Barlow Condensed
+  - `Brand.js`, `Model.js`, `SparePart.js` — card con hover lift, badge stock colorati, CTA orange
+  - `BrandList.js`, `ModelList.js`, `SparePartsList.js` — CSS grid responsive, empty state
+  - `Homepage.js` — hero section, USP bar (4 pillars), info cards, orari table, CTA finale
+  - `BrandsPage.js`, `ModelPage.js`, `SparePartsPage.js` — page header con conteggio risultati
+  - `Login.js` — pagina full-screen, show/hide password, spinner loading
+  - `App.js` — layout pulito, footer navy con brand + contatti + nav + copyright
+  - Build: ✅ `Compiled successfully` zero warning
 
 ---
 
@@ -35,8 +55,8 @@
 
 | # | Problema | File | Effort |
 |---|----------|------|--------|
-| 1 | Nessuna autenticazione reale | Backend + Frontend | 2-3 gg |
-| 2 | Area admin senza protezione | `App.js` routes + Spring Security | incluso in #1 |
+| ~~1~~ | ~~Nessuna autenticazione reale~~ | ~~Backend + Frontend~~ | ✅ Done |
+| ~~2~~ | ~~Area admin senza protezione~~ | ~~`App.js` routes~~ | ✅ Done |
 | 3 | `@CrossOrigin` wildcard su tutti i controller | 3 controller | 30 min |
 | 4 | PaymentPage placeholder (Stripe non integrato) | `PaymentPage.js` | 1-2 gg |
 
@@ -44,24 +64,11 @@
 
 ## 📋 Roadmap verso produzione
 
-### FASE 1 — Autenticazione (PROSSIMO STEP)
-**Obiettivo**: login reale con JWT, area admin protetta
+### ✅ FASE 1 — Autenticazione — COMPLETATA
 
-Backend:
-- [ ] Aggiungere dipendenze: `spring-boot-starter-security`, `jjwt`
-- [ ] Creare entity `User` (username, password_hash, role)
-- [ ] Creare `AuthController` con `POST /api/v1/auth/login` → ritorna JWT
-- [ ] Configurare `SecurityFilterChain`: GET pubblici, POST/PUT/DELETE richiedono ruolo ADMIN
-- [ ] Restringere `@CrossOrigin` a `http://localhost:3000`
+### ✅ FASE UI — Redesign Frontend — COMPLETATA
 
-Frontend:
-- [ ] Aggiornare `Login.js` con vera chiamata API + gestione token
-- [ ] Creare `AuthContext` per gestire lo stato di autenticazione
-- [ ] Creare componente `PrivateRoute` che verifica il token
-- [ ] Aggiungere header `Authorization: Bearer {token}` in Api.js per le chiamate admin
-- [ ] Proteggere le route `/admin`, `/BrandAdminPage`, `/ModelAdminPage`, `/SparePartsAdminPage`
-
-### FASE 2 — Docker + Infrastruttura
+### FASE 2 — Docker + Infrastruttura (PROSSIMO STEP)
 **Obiettivo**: tutto parte con `docker-compose up`
 
 - [ ] `Dockerfile` multi-stage per il backend Spring Boot
@@ -112,6 +119,11 @@ Frontend:
 
 ## Note / TODO per la prossima sessione
 
-- Iniziare da FASE 1 — autenticazione JWT
-- User admin iniziale: creare script SQL in `data.sql` con utente `admin` / password hashata
-- Ricordarsi di creare `.env` locale prima di avviare (variabili `MYSQL_HOST`, `MYUSER`, `MYPSW`)
+- **FASE 2** — Docker Compose + nginx: prossimo passo logico
+  - Dockerfile backend (JDK 21 multi-stage)
+  - Dockerfile frontend (build React + nginx serve)
+  - `docker-compose.yml`: MySQL + backend + nginx
+  - `nginx.conf`: frontend su `/`, API su `/api/`
+- Fix CORS: rimuovere `@CrossOrigin` wildcard dai controller, spostare configurazione in `SecurityConfig`
+- Unit test (FASE 5 anticipata): JwtUtil, AuthController, Login.js con `@test-engineer`
+- **Ricordarsi**: per commit usare `@git-manager`, non committare automaticamente
